@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Sequence
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, insert
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,6 +31,10 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    async def add_one(self, **kwargs) -> None:
+        query = insert(self.model).values(**kwargs)
+        await self.session.execute(query)
 
     async def get_last_trading_dates_by_query(
         self, *args, **kwargs

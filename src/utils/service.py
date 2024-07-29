@@ -9,6 +9,12 @@ class BaseService:
     base_repository: str = None
 
     @classmethod
+    async def add_one(cls, uow: UnitOfWork, **kwargs) -> None:
+        async with uow:
+            await uow.__dict__[cls.base_repository].add_one(**kwargs)
+
+
+    @classmethod
     async def get_last_trading_dates_by_query(
         cls, uow: UnitOfWork, **kwargs
     ) -> Sequence[Any]:

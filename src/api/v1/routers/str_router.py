@@ -13,15 +13,11 @@ router = APIRouter(prefix="/str")
 
 
 async def get_last_days_list(value: int, uow: UnitOfWork):
-    if value <= 0:
+    if value <= 0 or not isinstance(value, int):
         return False
     date_list = await SpimexTradingResultsService.get_last_trading_dates_by_query(uow)
     date_list.sort(reverse=True)
-    today = datetime.date.today()
-    last_day = max(date_list)
-    delta = datetime.timedelta(days=value)
-    if today - last_day < delta:
-        return date_list[:value]
+    return date_list[:value]
 
 
 @router.get("/last_trading_dates")
